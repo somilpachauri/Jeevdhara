@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'app_theme.dart';
 
 class NgoRequestDrive extends StatefulWidget {
   const NgoRequestDrive({super.key});
@@ -32,11 +31,7 @@ class _NgoRequestDriveState extends State<NgoRequestDrive> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: darkGreen, // Header background color
-              onPrimary: Colors.white, // Header text color
-              onSurface: darkBrown, // Body text color
-            ),
+            colorScheme: const ColorScheme.light(onPrimary: Colors.white),
           ),
           child: child!,
         );
@@ -108,11 +103,7 @@ class _NgoRequestDriveState extends State<NgoRequestDrive> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightGreen,
-      appBar: AppBar(
-        title: const Text('Request Plantation Drive'),
-        backgroundColor: darkGreen,
-      ),
+      appBar: AppBar(title: const Text('Request Plantation Drive')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Card(
@@ -123,7 +114,7 @@ class _NgoRequestDriveState extends State<NgoRequestDrive> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                const Icon(Icons.park, size: 50, color: darkGreen),
+                const Icon(Icons.park, size: 50),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _cityController,
@@ -147,7 +138,7 @@ class _NgoRequestDriveState extends State<NgoRequestDrive> {
                   onTap: () => _selectDate(context),
                   decoration: const InputDecoration(
                     labelText: 'Select Drive Date',
-                    suffixIcon: Icon(Icons.calendar_today, color: darkGreen),
+                    suffixIcon: Icon(Icons.calendar_today),
                   ),
                 ),
 
@@ -164,7 +155,7 @@ class _NgoRequestDriveState extends State<NgoRequestDrive> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _submitRequest,
-                    style: ElevatedButton.styleFrom(backgroundColor: darkGreen),
+                    style: ElevatedButton.styleFrom(),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_theme.dart';
+import 'main.dart'; // Needed to access themeNotifier
 import 'volunteer_login.dart';
 import 'landowner_login.dart';
 import 'ngo_login.dart';
@@ -9,140 +9,176 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: lightGreen, // Your earthy light green background
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Logo or Top Icon
-              const Icon(Icons.eco, size: 80, color: Colors.white),
-              const SizedBox(height: 24),
+      // --- APPBAR WITH THEME TOGGLE ---
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          ValueListenableBuilder<int>(
+            valueListenable: themeNotifier,
+            builder: (context, themeIndex, _) {
+              IconData themeIcon;
+              if (themeIndex == 0)
+                themeIcon = Icons.light_mode;
+              else if (themeIndex == 1)
+                themeIcon = Icons.dark_mode;
+              else
+                themeIcon = Icons.eco;
 
-              // Welcome Text
-              const Text(
-                'Welcome to Jeevdhara',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              return IconButton(
+                icon: Icon(themeIcon, color: colorScheme.onSurface),
+                tooltip: 'Toggle Theme',
+                onPressed: () => themeNotifier.value = (themeIndex + 1) % 3,
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          // FIXED: ConstrainedBox prevents UI from stretching too wide on Web/Desktop
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Icon(Icons.eco, size: 80, color: colorScheme.secondary),
+                const SizedBox(height: 24),
+                Text(
+                  "Welcome to Jeevdhara",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Choose your role to help protect life on land.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.white70),
-              ),
-              const SizedBox(height: 48),
+                const SizedBox(height: 8),
+                Text(
+                  "Choose your role to help protect life on land.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
+                ),
+                const SizedBox(height: 48),
 
-              // Role Selection Buttons
-              _buildRoleCard(
-                context,
-                title: 'Volunteer',
-                description:
-                    'Join tree planting drives and monitor local biodiversity.',
-                icon: Icons.volunteer_activism,
-                onTap: () {
-                  // Navigate to Volunteer Login
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const VolunteerLogin(),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              _buildRoleCard(
-                context,
-                title: 'Landowner',
-                description:
-                    'Offer your land for upcoming reforestation projects.',
-                icon: Icons.landscape,
-                onTap: () {
-                  // Navigate to Landowner Login
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LandownerLogin(),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              _buildRoleCard(
-                context,
-                title: 'NGO',
-                description: 'Organize planting drives and manage volunteers.',
-                icon: Icons.groups,
-                onTap: () {
-                  // Navigate to NGO Login
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const NGOLogin()),
-                  );
-                },
-              ),
-            ],
+                _buildRoleButton(
+                  context,
+                  title: "Volunteer",
+                  subtitle:
+                      "Join tree planting drives and monitor biodiversity.",
+                  icon: Icons.volunteer_activism,
+                  targetScreen: const VolunteerLogin(),
+                ),
+                const SizedBox(height: 16),
+                _buildRoleButton(
+                  context,
+                  title: "Landowner",
+                  subtitle:
+                      "Offer your land for upcoming reforestation projects.",
+                  icon: Icons.landscape,
+                  targetScreen: const LandownerLogin(),
+                ),
+                const SizedBox(height: 16),
+                _buildRoleButton(
+                  context,
+                  title: "NGO",
+                  subtitle: "Organize planting drives and manage volunteers.",
+                  icon: Icons.groups,
+                  targetScreen: const NGOLogin(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // A reusable widget for the role cards to keep code clean
-  Widget _buildRoleCard(
+  Widget _buildRoleButton(
     BuildContext context, {
     required String title,
-    required String description,
+    required String subtitle,
     required IconData icon,
-    required VoidCallback onTap,
+    required Widget targetScreen,
   }) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: darkGreen, // Your dark green palette color
-        padding: const EdgeInsets.all(20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 4,
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => targetScreen),
       ),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 40,
-            color: harvestGold,
-          ), // Golden accent for the icons
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: const TextStyle(fontSize: 12, color: Colors.white70),
-                ),
-              ],
-            ),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          // FIXED: Uses card color for high contrast against dark background
+          color: theme.cardTheme.color ?? colorScheme.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: colorScheme.onSurface.withValues(alpha: 0.1),
+            width: 2,
           ),
-          const Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 16),
-        ],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: colorScheme.secondary.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, size: 32, color: colorScheme.secondary),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: colorScheme.onSurface.withValues(alpha: 0.3),
+            ),
+          ],
+        ),
       ),
     );
   }
