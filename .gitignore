@@ -46,3 +46,18 @@ app.*.map.json
 
 # Secret Environment Variables
 .env
+.env.*
+
+# ====================================================================
+# Custom Secrets & Firebase Configurations
+# ====================================================================
+
+# Firebase service configuration files
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/macos/Runner/GoogleService-Info.plist
+
+# Android release signing keys and properties
+*.jks
+*.keystore
+/android/key.properties
