@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,15 +70,19 @@ class FeedGrid extends StatelessWidget {
           userLat: userLat,
           userLng: userLng,
         );
+
         if (!isLand) {
           final now = DateTime.now();
           final today = DateTime(now.year, now.month, now.day);
           
           docs = docs.where((doc) {
             final data = doc.data() as Map<String, dynamic>;
-            if (data['driveDate'] == null) return true; 
+            if (data['driveDate'] == null && data['date'] == null) return true; 
             
-            final dt = (data['driveDate'] as Timestamp).toDate();
+            Timestamp? stamp = data['driveDate'] ?? data['date'];
+            if (stamp == null) return true;
+
+            final dt = stamp.toDate();
             final driveDay = DateTime(dt.year, dt.month, dt.day);
             
             return !driveDay.isBefore(today);
@@ -103,9 +105,16 @@ class FeedGrid extends StatelessWidget {
             bool hasJoined = participants.contains(currentUserUid);
 
             String dateString = "Date TBD";
-            if (!isLand && data['driveDate'] != null) {
-              DateTime dt = (data['driveDate'] as Timestamp).toDate();
-              dateString = "${dt.day}/${dt.month}/${dt.year}";
+            if (!isLand) {
+              if (data['driveDate'] != null) {
+                DateTime dt = (data['driveDate'] as Timestamp).toDate();
+                dateString = "${dt.day}/${dt.month}/${dt.year}";
+              } else if (data['date'] != null) {
+                DateTime dt = (data['date'] as Timestamp).toDate();
+                dateString = "${dt.day}/${dt.month}/${dt.year}";
+              } else if (isCompany) {
+                dateString = "Ongoing CSR Initiative";
+              }
             }
 
             String distanceText = "";

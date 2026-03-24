@@ -34,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'Bihar': ['Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur'],
     'Uttarakhand': ['Dehradun', 'Haridwar', 'Roorkee', 'Rishikesh'],
     'West Bengal': ['Kolkata', 'Siliguri', 'Asansol', 'Durgapur'],
+    'Uttar Pradesh': ['Agra', 'Lucknow', 'Kanpur', 'Varanasi', 'Noida'],
   };
 
   String? _selectedState;
