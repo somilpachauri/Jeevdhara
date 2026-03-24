@@ -14,7 +14,7 @@ import 'features/community/screens/company_add_drive.dart';
 import 'features/auth/screens/auth_gate.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-final ValueNotifier<int> themeNotifier = ValueNotifier(0);
+final ValueNotifier<int> themeNotifier = ValueNotifier(1);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

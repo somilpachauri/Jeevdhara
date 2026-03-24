@@ -1,5 +1,3 @@
-// lib/features/dashboard/screens/main_dashboard.dart
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -70,7 +68,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.5,
-                      color: colorScheme.secondary,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                   Row(
@@ -162,7 +160,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       color: _currentIndex == 0 ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.5),
                       onPressed: () => setState(() => _currentIndex = 0),
                     ),
-                    const SizedBox(width: 48), // Space for the FAB
+                    const SizedBox(width: 48), 
                     IconButton(
                       icon: const Icon(Icons.person, size: 30),
                       color: _currentIndex == 1 ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.5),
