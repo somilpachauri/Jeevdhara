@@ -1,4 +1,4 @@
-
+// lib/core/utils/location_service.dart
 
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -10,8 +10,9 @@ class LocationResult {
   final String city;
   final String state;
 
- LocationResult(this.latitude, this.longitude, this.street, this.city, this.state);
+  LocationResult(this.latitude, this.longitude, this.street, this.city, this.state);
 }
+
 class LocationService {
   Future<LocationResult> getCurrentLocationDetails() async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -26,26 +27,31 @@ class LocationService {
       desiredAccuracy: LocationAccuracy.high,
     );
 
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-      position.latitude,
-      position.longitude,
-    );
-
-   String street = "Unknown Area";
+    String street = "Unknown Area";
     String city = "Unknown City";
     String state = "Unknown State";
 
-    if (placemarks.isNotEmpty) {
-      final place = placemarks.first;
-      
-      String streetName = place.street ?? '';
-      String subLocality = place.subLocality ?? '';
-      
-      street = "$streetName, $subLocality".trim();
-      if (street == ",") street = "Unknown Area"; 
-      
-      city = place.locality ?? place.subAdministrativeArea ?? "Unknown City";
-      state = place.administrativeArea ?? "Unknown State";
+    try {
+      // Wrap this in a try-catch because Flutter Web Geocoding frequently fails
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        final place = placemarks.first;
+        String streetName = place.street ?? '';
+        String subLocality = place.subLocality ?? '';
+        street = "$streetName, $subLocality".trim();
+        if (street == ",") street = "Unknown Area"; // Fallback if both are empty
+        
+        city = place.locality ?? place.subAdministrativeArea ?? "Unknown City";
+        state = place.administrativeArea ?? "Unknown State";
+      }
+    } catch (e) {
+      // If text geocoding fails on web, we swallow the error.
+      // The app will still return the raw GPS coordinates below!
+      print("Web Geocoding fallback triggered: $e");
     }
 
     return LocationResult(position.latitude, position.longitude, street, city, state);
