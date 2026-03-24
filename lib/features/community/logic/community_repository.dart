@@ -1,4 +1,3 @@
-// lib/features/community/logic/community_repository.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +13,7 @@ class CommunityRepository {
     required double? latitude,
     required double? longitude,
     required String roleType,
-    DateTime? driveDate, // ADDED THIS
+    DateTime? driveDate, 
     List<String>? resourcesProvided,
     bool openForCollab = false,
     String collabDetails = "",
@@ -24,7 +23,6 @@ class CommunityRepository {
 
     final userDoc = await _firestore.collection('users').doc(user.uid).get();
     
-    // Fallback names depending on the role
     String organizerName = 'Organizer';
     if (roleType == 'company') {
       organizerName = userDoc.data()?['companyName'] ?? 'Corporate Partner';
@@ -35,7 +33,7 @@ class CommunityRepository {
     await _firestore.collection('plantation_requests').add({
       'organizerId': user.uid,
       'organizerEmail': user.email,
-      'companyName': organizerName, // Keeping the field name consistent for the UI
+      'companyName': organizerName,
       'type': roleType,
       'address': address,
       'city': city,

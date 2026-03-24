@@ -1,4 +1,4 @@
-// lib/features/auth/screens/volunteer_login.dart
+
 
 import 'package:flutter/material.dart';
 import '../../dashboard/screens/main_dashboard.dart';
@@ -77,10 +77,8 @@ class _VolunteerLoginState extends State<VolunteerLogin> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      // --- 1. APPBAR COMPLETELY REMOVED ---
       
       body: SafeArea(
-        // --- 2. WRAPPED IN A STACK FOR THE FLOATING BACK BUTTON ---
         child: Stack(
           children: [
             Center(
@@ -99,7 +97,7 @@ class _VolunteerLoginState extends State<VolunteerLogin> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1), // Softened the shadow
+                          color: Colors.black.withValues(alpha: 0.1), 
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -182,7 +180,6 @@ class _VolunteerLoginState extends State<VolunteerLogin> {
               ),
             ),
             
-            // --- 3. THE FLOATING BACK BUTTON ---
             Positioned(
               top: 16,
               left: 16,

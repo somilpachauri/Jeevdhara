@@ -42,7 +42,6 @@ class JeevdharaApp extends StatelessWidget {
         return MaterialApp(
           title: 'Jeevdhara',
           debugShowCheckedModeBanner: false,
-          // --- FIXED: FORCES SNACKBARS TO FLOAT, PREVENTING FAB MOVEMENT ---
           theme: activeTheme.copyWith(
             snackBarTheme: const SnackBarThemeData(
               behavior: SnackBarBehavior.floating,

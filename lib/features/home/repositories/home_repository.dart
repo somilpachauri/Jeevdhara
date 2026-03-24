@@ -1,4 +1,3 @@
-// lib/features/home/repositories/home_repository.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,12 +7,10 @@ class HomeRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // 1. Fetch the Feed Stream
   Stream<QuerySnapshot> getFeedStream(String collectionPath) {
     return _firestore.collection(collectionPath).snapshots();
   }
 
-  // 2. Handle the "Join Drive" logic
   Future<void> toggleJoinDrive({
     required String collectionPath,
     required String docId,
@@ -35,7 +32,6 @@ class HomeRepository {
     }
   }
 
-  // 3. Helper to process and sort the data locally
   List<QueryDocumentSnapshot> filterAndSortDocs({
     required List<QueryDocumentSnapshot> docs,
     required String searchQuery,
@@ -46,7 +42,6 @@ class HomeRepository {
   }) {
     List<QueryDocumentSnapshot> filteredDocs = List.from(docs);
 
-    // FILTER
     if (searchQuery.isNotEmpty) {
       filteredDocs = filteredDocs.where((doc) {
         final data = doc.data() as Map<String, dynamic>;
@@ -55,7 +50,6 @@ class HomeRepository {
       }).toList();
     }
 
-    // SORT
     filteredDocs.sort((a, b) {
       final dataA = a.data() as Map<String, dynamic>;
       final dataB = b.data() as Map<String, dynamic>;
@@ -70,7 +64,6 @@ class HomeRepository {
         return (dataA['createdAt'] as Timestamp? ?? Timestamp.now())
             .compareTo(dataB['createdAt'] as Timestamp? ?? Timestamp.now());
       }
-      // default: date_desc
       return (dataB['createdAt'] as Timestamp? ?? Timestamp.now())
           .compareTo(dataA['createdAt'] as Timestamp? ?? Timestamp.now());
     });

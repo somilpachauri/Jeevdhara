@@ -49,12 +49,10 @@ class FeedCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Color Bar
             Container(
               height: 6,
               color: isCompany ? colorScheme.primary : accentColor,
             ),
-            // Main Content Padding
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -70,7 +68,6 @@ class FeedCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Bottom Action Bar
             if (!isLand) _buildActionBar(colorScheme, accentColor),
           ],
         ),
@@ -78,7 +75,6 @@ class FeedCard extends StatelessWidget {
     );
   }
 
-  // --- UI HELPER METHODS EXTRACTED FOR READABILITY ---
   
   Widget _buildHeader(ColorScheme colorScheme, Color accentColor) {
     return Row(

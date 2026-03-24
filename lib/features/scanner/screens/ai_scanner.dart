@@ -240,6 +240,38 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                 if (_analysisResult != null) ...[
                   const SizedBox(height: 40),
 
+                  // --- NEW: STOCK PHOTO WARNING ---
+                  if (_analysisResult!['biodiversity_analysis'] != null && _analysisResult!['biodiversity_analysis']['is_stock_photo'] == true)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 24),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent.withValues(alpha: 0.1),
+                        border: Border.all(color: Colors.redAccent),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.warning_amber_rounded, color: Colors.redAccent, size: 30),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Stock Image Detected", style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 16)),
+                                const SizedBox(height: 4),
+                                Text(
+                                  _analysisResult!['biodiversity_analysis']['stock_photo_reason'] ?? "Points cannot be awarded for non-original photos.",
+                                  style: TextStyle(color: colorScheme.onSurface, fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
                   // Species Details
                   if (_analysisResult!['biodiversity_analysis'] != null) ...[
                     Text("AI Vision Results", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: colorScheme.secondary)),
@@ -268,9 +300,10 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                _buildDetailRow("Common Name", _analysisResult!['biodiversity_analysis']['common name'], colorScheme),
                                 _buildDetailRow("Category", _analysisResult!['biodiversity_analysis']['ecological_category'], colorScheme),
                                 _buildDetailRow("Threat Level", _analysisResult!['biodiversity_analysis']['threat_level'], colorScheme, isAlert: true),
-                                _buildDetailRow("Rarity Score", "${_analysisResult!['biodiversity_analysis']['rarity_score']}/100", colorScheme),
+                                _buildDetailRow("Rarity Score", "${_analysisResult!['biodiversity_analysis']['rarity_score']}/10", colorScheme),
                                 _buildDetailRow(
                                   "Planting Suited",
                                   _analysisResult!['biodiversity_analysis']['suitability_for_reforestation'] == true ? "Yes ✅" : "No ❌",
@@ -315,8 +348,8 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                         title: "Authority Contact",
                         icon: Icons.account_balance, color: Colors.blueGrey,
                         data: _analysisResult!['location_context']['assigned_department'],
-                        mainKey: 'name', subKey: 'address',
-                        extraInfo: "📞 ${_analysisResult!['location_context']['assigned_department']['phone']}",
+                        mainKey: 'divisionName', subKey: 'circle',
+                        extraInfo: "District: ${_analysisResult!['location_context']['assigned_department']['district']}",
                         colorScheme: colorScheme,
                       ),
 
@@ -343,25 +376,35 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                   ],
 
                   // Points Update
-                  if (_analysisResult!['gamification'] != null && _analysisResult!['mode'] != "city_exploration") ...[
+                  if (_analysisResult!['gamification'] != null) ...[
                     const SizedBox(height: 32),
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [Colors.amber.shade600, Colors.orange.shade700]),
+                        gradient: LinearGradient(
+                          colors: _analysisResult!['gamification']['points'] > 0 
+                            ? [Colors.amber.shade600, Colors.orange.shade700]
+                            : [Colors.grey.shade600, Colors.grey.shade800],
+                        ),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.workspace_premium, color: Colors.white, size: 45),
+                          Icon(
+                            _analysisResult!['gamification']['points'] > 0 ? Icons.workspace_premium : Icons.info_outline, 
+                            color: Colors.white, size: 45
+                          ),
                           const SizedBox(width: 20),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("Rank Updated!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
                                 Text(
-                                  "${_analysisResult!['gamification']['points']} Points awarded to ${_analysisResult!['gamification']['user']}",
+                                  _analysisResult!['gamification']['points'] > 0 ? "Rank Updated!" : "No Points Awarded", 
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)
+                                ),
+                                Text(
+                                  _analysisResult!['gamification']['message'] ?? "",
                                   style: const TextStyle(color: Colors.white, fontSize: 14),
                                 ),
                               ],
@@ -417,6 +460,7 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("$label: ", style: const TextStyle(fontWeight: FontWeight.bold)),
           Expanded(child: Text(value.toString(), style: TextStyle(color: isAlert ? Colors.redAccent : colorScheme.onSurface))),
@@ -450,7 +494,7 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
               sub = "Area: ${item['areaAcres'] ?? item['areaSize'] ?? 'Unknown'} Acres";
             } else if (isNgo) {
               name = item['ngoName'] ?? "NGO";
-              sub = "Focus: ${item['focusAreas']?.join(', ') ?? 'Conservation'}";
+              sub = "Focus: ${item['focus'] ?? 'Conservation'}";
             } else {
               name = item['commonName'] ?? item['scientificName'] ?? "Species";
               sub = "Status: ${item['conservationStatus'] ?? item['category'] ?? 'Unknown'}";

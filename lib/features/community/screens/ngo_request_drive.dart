@@ -1,4 +1,3 @@
-// lib/features/community/screens/ngo_request_drive.dart
 
 import 'package:flutter/material.dart';
 import '../../../core/utils/location_service.dart';
@@ -59,7 +58,6 @@ class _NgoRequestDriveState extends State<NgoRequestDrive> {
     setState(() => _isLoading = true);
     
     try {
-      // Handle manual address entry
       if (_latitude == null || _longitude == null) {
         final pos = await _locationService.getCoordinatesFromAddress(
             "${_addressController.text}, ${_cityController.text}");
@@ -69,7 +67,6 @@ class _NgoRequestDriveState extends State<NgoRequestDrive> {
         }
       }
 
-      // Use the Clean Repository
       await _communityRepository.addPlantationDrive(
         address: _addressController.text.trim(),
         city: _cityController.text.trim(),
@@ -102,7 +99,6 @@ class _NgoRequestDriveState extends State<NgoRequestDrive> {
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
 
-    // Kept your custom decoration for this specific screen's aesthetic
     InputDecoration buildInputDecoration(String label) {
       return InputDecoration(
         labelText: label,

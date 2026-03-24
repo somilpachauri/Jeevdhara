@@ -1,4 +1,3 @@
-// lib/features/profile/logic/profile_repository.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +6,6 @@ class ProfileRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // 1. Fetch current user data
   Future<Map<String, dynamic>?> fetchUserData() async {
     final user = _auth.currentUser;
     if (user != null) {
@@ -19,7 +17,6 @@ class ProfileRepository {
     return null;
   }
 
-  // 2. Fetch Corporate Impact (Drives hosted & total volunteers)
   Future<Map<String, int>> fetchCorporateImpact() async {
     final user = _auth.currentUser;
     if (user == null) return {'drives': 0, 'volunteers': 0};
@@ -41,7 +38,6 @@ class ProfileRepository {
     };
   }
 
-  // 3. Save preferred location
 Future<void> saveProfileLocation(String state, String city, {double? lat, double? lng}) async {
     final user = _auth.currentUser;
     if (user == null) throw Exception("User not logged in.");

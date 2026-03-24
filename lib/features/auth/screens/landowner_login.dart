@@ -1,4 +1,3 @@
-// lib/features/auth/screens/landowner_login.dart
 
 import 'package:flutter/material.dart';
 import '../logic/auth_repository.dart';
@@ -54,7 +53,6 @@ class _LandownerLoginState extends State<LandownerLogin> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          // --- FIXED: Explicit BuildContext added to resolve closure error ---
           MaterialPageRoute(builder: (BuildContext context) => const MainDashboard()),
         );
       }

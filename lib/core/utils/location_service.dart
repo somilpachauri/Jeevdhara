@@ -1,4 +1,4 @@
-// lib/core/utils/location_service.dart
+
 
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -38,12 +38,11 @@ class LocationService {
     if (placemarks.isNotEmpty) {
       final place = placemarks.first;
       
-      // Safely handle nulls from Flutter Web
       String streetName = place.street ?? '';
       String subLocality = place.subLocality ?? '';
       
       street = "$streetName, $subLocality".trim();
-      if (street == ",") street = "Unknown Area"; // Fallback if both are empty
+      if (street == ",") street = "Unknown Area"; 
       
       city = place.locality ?? place.subAdministrativeArea ?? "Unknown City";
       state = place.administrativeArea ?? "Unknown State";

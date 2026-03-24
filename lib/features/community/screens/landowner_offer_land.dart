@@ -1,4 +1,3 @@
-// lib/features/community/screens/landowner_offer_land.dart
 
 import 'package:flutter/material.dart';
 import '../../../core/widgets/custom_text_field.dart';
@@ -39,7 +38,6 @@ class _LandownerOfferLandState extends State<LandownerOfferLand> {
       setState(() {
         _latitude = result.latitude;
         _longitude = result.longitude;
-        // Combine street and city for the land location field
         _locationController.text = "${result.street}, ${result.city}";
       });
     } catch (e) {
@@ -58,7 +56,6 @@ class _LandownerOfferLandState extends State<LandownerOfferLand> {
     setState(() => _isLoading = true);
     
     try {
-      // Handle manual address entry
       if (_latitude == null || _longitude == null) {
         final pos = await _locationService.getCoordinatesFromAddress(_locationController.text.trim());
         if (pos != null) {
@@ -67,7 +64,6 @@ class _LandownerOfferLandState extends State<LandownerOfferLand> {
         }
       }
 
-      // Use the Clean Repository
       await _communityRepository.addLandOffer(
         areaSize: _areaController.text.trim(),
         location: _locationController.text.trim(),
@@ -116,7 +112,6 @@ class _LandownerOfferLandState extends State<LandownerOfferLand> {
                   Icon(Icons.landscape, size: 60, color: colorScheme.secondary),
                   const SizedBox(height: 24),
 
-                  // --- REUSABLE WIDGETS ---
                   CustomTextField(
                     controller: _areaController,
                     labelText: 'Land Area (e.g., 200 Sq Foot)',

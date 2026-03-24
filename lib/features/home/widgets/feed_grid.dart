@@ -1,4 +1,3 @@
-// lib/features/community/widgets/feed_grid.dart
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -106,10 +105,8 @@ class FeedGrid extends StatelessWidget {
               areaString = rawArea.toLowerCase().contains(RegExp(r'[a-z]')) ? rawArea : "$rawArea sq feet";
             }
 
-            // --- NEW: WIDTH CONSTRAINT INCREASED TO MATCH TOP BUTTONS ---
             return Center(
               child: ConstrainedBox(
-                // Limits how wide the cards stretch, set to 800 to match the TabContainer width
                 constraints: const BoxConstraints(maxWidth: 800), 
                 child: FeedCard(
                   data: data,

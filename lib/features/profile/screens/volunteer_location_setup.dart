@@ -1,4 +1,3 @@
-// lib/features/profile/screens/volunteer_location_setup.dart
 
 import 'package:flutter/material.dart';
 import '../../../core/widgets/custom_text_field.dart';
@@ -53,7 +52,6 @@ class _VolunteerLocationSetupState extends State<VolunteerLocationSetup> {
     setState(() => _isLoading = true);
     
     try {
-      // Convert their typed text into coordinates using our service
       double? lat;
       double? lng;
       
@@ -66,7 +64,6 @@ class _VolunteerLocationSetupState extends State<VolunteerLocationSetup> {
         lng = pos.longitude;
       }
 
-      // Save via Clean Repository
       await _profileRepository.saveProfileLocation(
         _stateController.text.trim(),
         _cityController.text.trim(),
@@ -76,7 +73,7 @@ class _VolunteerLocationSetupState extends State<VolunteerLocationSetup> {
 
       if (mounted) {
         _showSnackBar('Preferences Saved!');
-        Navigator.pop(context); // Go back to feed
+        Navigator.pop(context);
       }
     } catch (e) {
       _showSnackBar('Error: $e');
@@ -127,7 +124,6 @@ class _VolunteerLocationSetupState extends State<VolunteerLocationSetup> {
                 ),
                 const SizedBox(height: 40),
 
-                // Auto GPS Button
                 ElevatedButton.icon(
                   onPressed: _isFetchingGPS ? null : _useGPSLocation,
                   icon: _isFetchingGPS
@@ -153,7 +149,6 @@ class _VolunteerLocationSetupState extends State<VolunteerLocationSetup> {
                   ),
                 ),
 
-                // --- REUSABLE WIDGETS ---
                 CustomTextField(
                   controller: _cityController,
                   labelText: 'City (e.g., Dehradun)',
@@ -169,7 +164,6 @@ class _VolunteerLocationSetupState extends State<VolunteerLocationSetup> {
 
                 const SizedBox(height: 40),
 
-                // Save Button
                 SizedBox(
                   height: 55,
                   child: ElevatedButton(

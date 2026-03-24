@@ -1,4 +1,3 @@
-// lib/features/community/screens/company_add_drive.dart
 
 import 'package:flutter/material.dart';
 import '../../../core/widgets/custom_text_field.dart';
@@ -70,7 +69,6 @@ class _CompanyAddDriveState extends State<CompanyAddDrive> {
     setState(() => _isLoading = true);
     
     try {
-      // Handle manual address entry if GPS wasn't used
       if (_latitude == null || _longitude == null) {
         final pos = await _locationService.getCoordinatesFromAddress(
             "${_addressController.text}, ${_cityController.text}");
@@ -85,7 +83,6 @@ class _CompanyAddDriveState extends State<CompanyAddDrive> {
           .map((e) => e.key)
           .toList();
 
-      // Use the Clean Repository
       await _communityRepository.addPlantationDrive(
         address: _addressController.text.trim(),
         city: _cityController.text.trim(),
@@ -142,7 +139,6 @@ class _CompanyAddDriveState extends State<CompanyAddDrive> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Location Controls utilizing CustomTextField
                   Row(
                     children: [
                       Expanded(
@@ -201,7 +197,6 @@ class _CompanyAddDriveState extends State<CompanyAddDrive> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Resources
                   Text(
                     "Resources Provided by Company",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorScheme.onSurface),
@@ -219,7 +214,6 @@ class _CompanyAddDriveState extends State<CompanyAddDrive> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Collab
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(

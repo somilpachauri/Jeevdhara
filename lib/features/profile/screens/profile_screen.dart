@@ -1,4 +1,4 @@
-// lib/features/profile/screens/profile_screen.dart
+
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,7 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _corporateDrivesHosted = 0;
   int _totalCorporateVolunteers = 0;
 
-  // --- RESTRICTED HACKATHON DATA ---
   final Map<String, List<String>> _stateCityMap = {
     'Punjab': ['Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala'],
     'Himachal Pradesh': ['Shimla', 'Solan', 'Dharamshala', 'Mandi'],
@@ -74,7 +73,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _totalCorporateVolunteers = impact['volunteers'] ?? 0;
           });
         } else {
-          // FIXED: Changed UserService to _leaderboardRepository
           final data = await _leaderboardRepository.fetchLeaderboard();
           setState(() {
             _leaderboard = data;
@@ -153,7 +151,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final theme = Theme.of(context);
 
     final username = user?.email?.split('@')[0] ?? "Volunteer";
-    // FIXED: Changed UserService to _leaderboardRepository
     final myStats = _leaderboardRepository.getUserStats(_leaderboard, username);
     final userBadges = myStats['badges'] as List<dynamic>? ?? [];
 
@@ -168,7 +165,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // --- PROFILE HEADER ---
                       Center(
                         child: Column(
                           children: [
@@ -204,7 +200,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 32),
 
-                      // --- REGION SETTINGS ---
                       Text(
                         "Region Preferences",
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: colorScheme.onSurface),
@@ -312,7 +307,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 32),
 
-                      // --- ROLE BASED UI ---
                       if (_userRole == 'company') ...[
                         Text(
                           "CSR & Carbon Impact",
@@ -432,7 +426,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                       const SizedBox(height: 48),
 
-                      // --- LOGOUT BUTTON ---
                       Container(
                         width: double.infinity,
                         height: 55,

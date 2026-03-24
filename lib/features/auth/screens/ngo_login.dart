@@ -1,4 +1,4 @@
-// lib/features/auth/screens/ngo_login.dart
+
 
 import 'package:flutter/material.dart';
 import '../../dashboard/screens/main_dashboard.dart';
@@ -54,7 +54,6 @@ class _NGOLoginState extends State<NGOLogin> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          // --- FIXED: Explicit BuildContext added to resolve closure error ---
           MaterialPageRoute(builder: (BuildContext context) => const MainDashboard()),
         );
       }

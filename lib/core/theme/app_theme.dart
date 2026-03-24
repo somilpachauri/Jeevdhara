@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-// ==========================================
-// 1. ORIGINAL GREEN THEME
-// ==========================================
 const Color lightGreen = Color(0xFFE8F5E9);
 const Color darkGreen = Color(0xFF2E7D32);
 const Color harvestGold = Color(0xFFFBC02D);
@@ -50,9 +47,6 @@ final ThemeData originalGreenTheme = ThemeData(
   ),
 );
 
-// ==========================================
-// 2. "STORMY MORNING" LIGHT THEME
-// ==========================================
 const Color stormBg = Color(0xFFBDDDFC);
 const Color stormSurface = Color(0xFFFFFFFF);
 const Color stormPrimary = Color(0xFF384959);
@@ -103,16 +97,13 @@ final ThemeData lightTheme = ThemeData(
   ),
 );
 
-// ==========================================
-// 3. "REACT DEV" DARK THEME (From Screenshot)
-// ==========================================
-const Color reactBg = Color(0xFF23272F); // Dark slate background
-const Color reactSurface = Color(0xFF343A46); // Slightly lighter for cards
+const Color reactBg = Color(0xFF23272F);
+const Color reactSurface = Color(0xFF343A46);
 const Color reactPrimary = Color(
   0xFF23272F,
-); // Matches background for clean look
-const Color reactAccent = Color(0xFF149ECA); // Vibrant Cyan
-const Color reactText = Color(0xFFF6F7F9); // Crisp off-white
+);
+const Color reactAccent = Color(0xFF149ECA);
+const Color reactText = Color(0xFFF6F7F9);
 
 final ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
@@ -126,17 +117,17 @@ final ThemeData darkTheme = ThemeData(
     onSurface: reactText,
   ),
   appBarTheme: const AppBarTheme(
-    backgroundColor: reactBg, // Flat modern look
+    backgroundColor: reactBg, 
     foregroundColor: reactText,
     elevation: 0,
     centerTitle: true,
   ),
   cardTheme: CardThemeData(
     color: reactSurface,
-    elevation: 0, // Flat design similar to modern web
+    elevation: 0, 
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
-    ), // Slightly softer edges
+    ), 
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(

@@ -56,11 +56,9 @@ class _MainDashboardState extends State<MainDashboard> {
     final bool canUseScanner = userRole != 'company';
 
     return Scaffold(
-      // --- APPBAR REMOVED! Replaced with Custom Header below ---
       body: SafeArea(
         child: Column(
           children: [
-            // --- CUSTOM SLEEK HEADER ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               child: Row(
@@ -134,7 +132,6 @@ class _MainDashboardState extends State<MainDashboard> {
               ),
             ),
             
-            // --- SCREEN CONTENT ---
             Expanded(
               child: _currentIndex == 0
                   ? HomeScreen(userLat: userLat, userLng: userLng)

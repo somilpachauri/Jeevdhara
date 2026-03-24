@@ -1,4 +1,4 @@
-// lib/features/home/widgets/home_app_bar.dart
+
 
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(260); // Slightly increased height
+  Size get preferredSize => const Size.fromHeight(260); 
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +27,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // --- NEW: LONG OVAL "COMMUNITY FEED" BOX FIX ---
               Padding(
                 padding: const EdgeInsets.only(top: 20.0, bottom: 12.0, left: 16.0, right: 16.0),
                 child: Container(
-                  width: 800, // Expand to match the width of tabs/cards
-                  padding: const EdgeInsets.symmetric(vertical: 16), // Increased vertical padding
+                  width: 800, 
+                  padding: const EdgeInsets.symmetric(vertical: 16), 
                   decoration: BoxDecoration(
                     color: colorScheme.secondary.withValues(alpha: 0.4), 
-                    borderRadius: BorderRadius.circular(50), // Makes it a perfect oval
+                    borderRadius: BorderRadius.circular(50), 
                   ),
-                  child: const Center( // Center the text within the oval
+                  child: const Center( 
                     child: Text(
                       "Community Feed",
                       style: TextStyle(
@@ -51,7 +50,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                // --- FIX OVERFLOW ERROR (Refine Row and TextField) ---
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -65,7 +63,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                           prefixIcon: Icon(Icons.search, color: colorScheme.secondary),
                           filled: true,
                           fillColor: theme.cardTheme.color ?? colorScheme.surface,
-                          // ADDED HORIZONTAL CONTENT PADDING TO FIX OVERFLOW
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30), 
@@ -75,7 +72,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    // Refined Sort Button Structure
                     Material(
                       color: Colors.transparent,
                       child: PopupMenuButton<String>(

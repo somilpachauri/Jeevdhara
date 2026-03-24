@@ -1,12 +1,11 @@
-// lib/features/auth/screens/welcome_screen.dart
+
 
 import 'package:flutter/material.dart';
 import '../../../main.dart';
 import 'volunteer_login.dart';
 import 'landowner_login.dart';
 import 'ngo_login.dart';
-import 'company_login.dart'; // Make sure the file name matches your actual file (company_login vs comapny_login)
-
+import 'company_login.dart';
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -16,12 +15,9 @@ class WelcomeScreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      // --- APP BAR COMPLETELY REMOVED ---
       body: SafeArea(
-        // --- STACK USED TO FLOAT THE THEME ICON ---
         child: Stack(
           children: [
-            // --- MAIN CONTENT ---
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0), // Added vertical padding
@@ -90,7 +86,6 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
 
-            // --- FLOATING THEME TOGGLE (Top Right) ---
             Positioned(
               top: 16,
               right: 16,
@@ -107,7 +102,7 @@ class WelcomeScreen extends StatelessWidget {
                   }
 
                   return IconButton(
-                    icon: Icon(themeIcon, color: colorScheme.onSurface, size: 28), // Slightly larger icon
+                    icon: Icon(themeIcon, color: colorScheme.onSurface, size: 28), 
                     tooltip: 'Toggle Theme',
                     onPressed: () => themeNotifier.value = (themeIndex + 1) % 3,
                   );
