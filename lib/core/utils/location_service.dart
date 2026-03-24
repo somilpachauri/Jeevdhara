@@ -1,4 +1,3 @@
-// lib/core/utils/location_service.dart
 
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -32,7 +31,6 @@ class LocationService {
     String state = "Unknown State";
 
     try {
-      // Wrap this in a try-catch because Flutter Web Geocoding frequently fails
       List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
@@ -43,14 +41,12 @@ class LocationService {
         String streetName = place.street ?? '';
         String subLocality = place.subLocality ?? '';
         street = "$streetName, $subLocality".trim();
-        if (street == ",") street = "Unknown Area"; // Fallback if both are empty
+        if (street == ",") street = "Unknown Area"; 
         
         city = place.locality ?? place.subAdministrativeArea ?? "Unknown City";
         state = place.administrativeArea ?? "Unknown State";
       }
     } catch (e) {
-      // If text geocoding fails on web, we swallow the error.
-      // The app will still return the raw GPS coordinates below!
       print("Web Geocoding fallback triggered: $e");
     }
 

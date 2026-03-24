@@ -1,4 +1,3 @@
-// lib/features/scanner/screens/ai_scanner.dart
 
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -21,14 +20,11 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
   bool _isLoading = false;
   Map<String, dynamic>? _analysisResult;
 
-  final List<String> _availableCities = [
-    'none', 'Dehradun', 'Haridwar', 'Roorkee', 'Rishikesh', 'Agra', 'Lucknow',
-    'Kanpur', 'Varanasi', 'Noida', 'Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur',
-    'Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala', 'Shimla', 'Solan',
-    'Dharamshala', 'Mandi', 'Kolkata', 'Siliguri', 'Asansol', 'Durgapur',
+  final List<String> _availableRegions = [
+    'none', 'Bihar', 'Himachal Pradesh', 'Punjab', 'Uttarakhand', 'West Bengal'
   ];
 
-  String? _selectedCity = 'none';
+  String? _selectedRegion = 'none';
   String _selectedLanguage = 'english';
 
   Future<void> _pickImage() async {
@@ -84,8 +80,8 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
   }
 
   Future<void> _exploreCityOnly() async {
-    if (_selectedCity == null || _selectedCity == 'none') {
-      _showSnackBar('Please select a specific city first.');
+    if (_selectedRegion == null || _selectedRegion == 'none') {
+      _showSnackBar('Please select a specific region first.');
       return;
     }
     setState(() => _imageBytes = null);
@@ -101,7 +97,7 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
       final result = await _aiRepository.analyzeBiodiversity(
         username: username,
         language: _selectedLanguage,
-        selectedCity: _selectedCity!,
+        selectedCity: _selectedRegion!,
         imageBytes: _imageBytes,
         includeImage: includeImage,
       );
@@ -125,6 +121,15 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
+
+    final Map<String, dynamic> bio = _analysisResult?['biodiversity_analysis'] is Map ? _analysisResult!['biodiversity_analysis'] : {};
+    final Map<String, dynamic> loc = _analysisResult?['location_context'] is Map ? _analysisResult!['location_context'] : {};
+    final Map<String, dynamic> gam = _analysisResult?['gamification'] is Map ? _analysisResult!['gamification'] : {};
+    
+    final rawPoints = gam['points'];
+    int points = 0;
+    if (rawPoints is int) points = rawPoints;
+    if (rawPoints is String) points = int.tryParse(rawPoints) ?? 0;
 
     return Scaffold(
       appBar: AppBar(title: const Text("AI & Eco-Explorer")),
@@ -166,17 +171,17 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                       flex: 2,
                       child: DropdownButtonFormField<String>(
                         isExpanded: true,
-                        initialValue: _selectedCity,
+                        initialValue: _selectedRegion,
                         dropdownColor: theme.cardTheme.color ?? colorScheme.surface,
                         decoration: InputDecoration(
-                          labelText: 'Select City Region',
-                          prefixIcon: Icon(Icons.location_city, color: colorScheme.secondary),
+                          labelText: 'Select State / Region',
+                          prefixIcon: Icon(Icons.location_on, color: colorScheme.secondary),
                           filled: true,
                           fillColor: theme.cardTheme.color ?? colorScheme.surface,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                         ),
-                        items: _availableCities.map((city) => DropdownMenuItem(value: city, child: Text(city))).toList(),
-                        onChanged: (val) => setState(() => _selectedCity = val),
+                        items: _availableRegions.map((city) => DropdownMenuItem(value: city, child: Text(city))).toList(),
+                        onChanged: (val) => setState(() => _selectedRegion = val),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -213,6 +218,9 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                         icon: const Icon(Icons.travel_explore),
                         label: const Text("City Data Only"),
                         style: OutlinedButton.styleFrom(
+                          // --- NEW: FIX VISIBILITY ISSUE FOR THE BUTTON ---
+                          foregroundColor: colorScheme.onSurface, 
+                          side: BorderSide(color: colorScheme.onSurface.withValues(alpha: 0.3)),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         ),
@@ -240,8 +248,7 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                 if (_analysisResult != null) ...[
                   const SizedBox(height: 40),
 
-                  // --- NEW: STOCK PHOTO WARNING ---
-                  if (_analysisResult!['biodiversity_analysis'] != null && _analysisResult!['biodiversity_analysis']['is_stock_photo'] == true)
+                  if (bio['is_stock_photo'] == true)
                     Container(
                       margin: const EdgeInsets.only(bottom: 24),
                       padding: const EdgeInsets.all(16),
@@ -262,7 +269,7 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                                 const Text("Stock Image Detected", style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 16)),
                                 const SizedBox(height: 4),
                                 Text(
-                                  _analysisResult!['biodiversity_analysis']['stock_photo_reason'] ?? "Points cannot be awarded for non-original photos.",
+                                  bio['stock_photo_reason'] ?? "Points cannot be awarded for non-original photos.",
                                   style: TextStyle(color: colorScheme.onSurface, fontSize: 14),
                                 ),
                               ],
@@ -272,8 +279,7 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                       ),
                     ),
 
-                  // Species Details
-                  if (_analysisResult!['biodiversity_analysis'] != null) ...[
+                  if (bio.isNotEmpty) ...[
                     Text("AI Vision Results", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: colorScheme.secondary)),
                     const SizedBox(height: 12),
                     Card(
@@ -287,11 +293,11 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                         initiallyExpanded: true,
                         leading: const Icon(Icons.biotech, color: Colors.green),
                         title: Text(
-                          _analysisResult!['biodiversity_analysis']['species'] ?? 'Unknown',
+                          bio['species'] ?? bio['common name'] ?? 'Unknown Species',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          _analysisResult!['biodiversity_analysis']['scientific_name'] ?? '',
+                          bio['scientific_name'] ?? '',
                           style: const TextStyle(fontStyle: FontStyle.italic),
                         ),
                         children: [
@@ -300,20 +306,20 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildDetailRow("Common Name", _analysisResult!['biodiversity_analysis']['common name'], colorScheme),
-                                _buildDetailRow("Category", _analysisResult!['biodiversity_analysis']['ecological_category'], colorScheme),
-                                _buildDetailRow("Threat Level", _analysisResult!['biodiversity_analysis']['threat_level'], colorScheme, isAlert: true),
-                                _buildDetailRow("Rarity Score", "${_analysisResult!['biodiversity_analysis']['rarity_score']}/10", colorScheme),
+                                _buildDetailRow("Common Name", bio['common name'], colorScheme),
+                                _buildDetailRow("Category", bio['ecological_category'], colorScheme),
+                                _buildDetailRow("Threat Level", bio['threat_level'], colorScheme, isAlert: true),
+                                _buildDetailRow("Rarity Score", bio['rarity_score'] != null ? "${bio['rarity_score']}/10" : null, colorScheme),
                                 _buildDetailRow(
                                   "Planting Suited",
-                                  _analysisResult!['biodiversity_analysis']['suitability_for_reforestation'] == true ? "Yes ✅" : "No ❌",
+                                  bio['suitability_for_reforestation'] == true ? "Yes ✅" : "No ❌",
                                   colorScheme,
                                 ),
-                                if (_analysisResult!['biodiversity_analysis']['legal_status'] != null)
-                                  _buildDetailRow("Legal Status", _analysisResult!['biodiversity_analysis']['legal_status'], colorScheme),
+                                if (bio['legal_status'] != null)
+                                  _buildDetailRow("Legal Status", bio['legal_status'], colorScheme),
                                 const SizedBox(height: 12),
                                 const Text("Action Plan:", style: TextStyle(fontWeight: FontWeight.bold)),
-                                ...(_analysisResult!['biodiversity_analysis']['immediate_action_steps'] as List<dynamic>? ?? []).map(
+                                ...(bio['immediate_action_steps'] is List ? bio['immediate_action_steps'] as List : []).map(
                                   (step) => Padding(padding: const EdgeInsets.only(top: 4.0), child: Text("• $step")),
                                 ),
                               ],
@@ -324,65 +330,63 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                     ),
                   ],
 
-                  // Ecosystem Details
-                  if (_analysisResult!['location_context'] != null) ...[
+                  if (loc.isNotEmpty) ...[
                     const SizedBox(height: 24),
                     Text(
-                      "${_selectedCity == 'none' ? 'Local' : _selectedCity} Ecosystem Report",
+                      "${_selectedRegion == 'none' ? 'Local' : _selectedRegion} Ecosystem Report",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: colorScheme.secondary),
                     ),
                     const SizedBox(height: 12),
 
-                    if (_analysisResult!['location_context']['assigned_park'] != null)
+                    if (loc['assigned_park'] != null && loc['assigned_park'] is Map)
                       _buildInfoCard(
                         title: "Nearby Protected Area",
                         icon: Icons.terrain, color: Colors.green,
-                        data: _analysisResult!['location_context']['assigned_park'],
+                        data: loc['assigned_park'],
                         mainKey: 'forestName', subKey: 'forestType',
-                        extraInfo: "Risk: ${_analysisResult!['location_context']['assigned_park']['deforestationRisk']}",
+                        extraInfo: "Risk: ${loc['assigned_park']['deforestationRisk'] ?? 'Unknown'}",
                         colorScheme: colorScheme,
                       ),
 
-                    if (_analysisResult!['location_context']['assigned_department'] != null)
+                    if (loc['assigned_department'] != null && loc['assigned_department'] is Map)
                       _buildInfoCard(
                         title: "Authority Contact",
                         icon: Icons.account_balance, color: Colors.blueGrey,
-                        data: _analysisResult!['location_context']['assigned_department'],
+                        data: loc['assigned_department'],
                         mainKey: 'divisionName', subKey: 'circle',
-                        extraInfo: "District: ${_analysisResult!['location_context']['assigned_department']['district']}",
+                        extraInfo: "District: ${loc['assigned_department']['district'] ?? 'Unknown'}",
                         colorScheme: colorScheme,
                       ),
 
                     _buildExpansionMenu(
                       title: "Endangered Fauna", icon: Icons.pets, iconColor: Colors.orange,
-                      items: _analysisResult!['location_context']['local_endangered_fauna'],
+                      items: loc['local_endangered_fauna'],
                       theme: theme, colorScheme: colorScheme,
                     ),
                     _buildExpansionMenu(
                       title: "Endangered Flora", icon: Icons.local_florist, iconColor: Colors.pink,
-                      items: _analysisResult!['location_context']['local_endangered_flora'],
+                      items: loc['local_endangered_flora'],
                       theme: theme, colorScheme: colorScheme,
                     ),
                     _buildExpansionMenu(
                       title: "Degraded Lands", icon: Icons.landscape, iconColor: Colors.brown,
-                      items: _analysisResult!['location_context']['nearby_degraded_lands'],
+                      items: loc['nearby_degraded_lands'],
                       theme: theme, colorScheme: colorScheme, isLand: true,
                     ),
                     _buildExpansionMenu(
                       title: "Active Local NGOs", icon: Icons.groups, iconColor: Colors.blue,
-                      items: _analysisResult!['location_context']['nearby_ngos'],
+                      items: loc['nearby_ngos'],
                       theme: theme, colorScheme: colorScheme, isNgo: true,
                     ),
                   ],
 
-                  // Points Update
-                  if (_analysisResult!['gamification'] != null) ...[
+                  if (gam.isNotEmpty) ...[
                     const SizedBox(height: 32),
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: _analysisResult!['gamification']['points'] > 0 
+                          colors: points > 0 
                             ? [Colors.amber.shade600, Colors.orange.shade700]
                             : [Colors.grey.shade600, Colors.grey.shade800],
                         ),
@@ -391,7 +395,7 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                       child: Row(
                         children: [
                           Icon(
-                            _analysisResult!['gamification']['points'] > 0 ? Icons.workspace_premium : Icons.info_outline, 
+                            points > 0 ? Icons.workspace_premium : Icons.info_outline, 
                             color: Colors.white, size: 45
                           ),
                           const SizedBox(width: 20),
@@ -400,11 +404,11 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _analysisResult!['gamification']['points'] > 0 ? "Rank Updated!" : "No Points Awarded", 
+                                  points > 0 ? "Rank Updated!" : "No Points Awarded", 
                                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)
                                 ),
                                 Text(
-                                  _analysisResult!['gamification']['message'] ?? "",
+                                  gam['message'] ?? "",
                                   style: const TextStyle(color: Colors.white, fontSize: 14),
                                 ),
                               ],
@@ -424,7 +428,6 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
     );
   }
 
-  // --- HELPER METHODS ---
   Widget _buildInfoCard({
     required String title, required IconData icon, required Color color,
     required Map<String, dynamic> data, required String mainKey, required String subKey,

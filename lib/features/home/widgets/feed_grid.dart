@@ -1,4 +1,5 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -71,6 +72,20 @@ class FeedGrid extends StatelessWidget {
           userLat: userLat,
           userLng: userLng,
         );
+        if (!isLand) {
+          final now = DateTime.now();
+          final today = DateTime(now.year, now.month, now.day);
+          
+          docs = docs.where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            if (data['driveDate'] == null) return true; 
+            
+            final dt = (data['driveDate'] as Timestamp).toDate();
+            final driveDay = DateTime(dt.year, dt.month, dt.day);
+            
+            return !driveDay.isBefore(today);
+          }).toList();
+        }
 
         if (docs.isEmpty) {
           return Center(child: Text("No results found.", style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7))));
