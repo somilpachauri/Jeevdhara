@@ -45,7 +45,7 @@ Custom dashboards and onboarding flows for:
 This project is a collaborative effort between:
 
 * **Somil Pachauri** – Lead Flutter Developer & UI/UX Designer([somilpachauri.in](https://somilpachauri.in)).
-* **Nitish Joshi** – Backend Architect & AI Integration ([nitihsjoshi.in](https://nitihsjoshi.in)).
+* **Nitish Joshi** – Backend Architect & AI Integration ([nitihsjoshi.in](https://nitishjoshi.in)).
 * **Asdaq Naved Mallick** – Database Contributor ([LinkedIn](https://www.linkedin.com/in/asdaqnavedmallick)).
 * **Nirmal Kumar** – Technical Advisor & Contributor ([LinkedIn](https://www.linkedin.com/in/nirmalkumar8182)).
 
