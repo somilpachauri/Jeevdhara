@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,7 +20,46 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
   Map<String, dynamic>? _analysisResult;
 
   final List<String> _availableRegions = [
-    'none', 'Bihar', 'Himachal Pradesh', 'Punjab', 'Uttarakhand', 'West Bengal'
+    'none',
+    'Patna',
+    'Muzaffarpur',
+    'Gaya',
+    'Shimla',
+    'Rampur',
+    'Rohru',
+    'Solan',
+    'Nahan',
+    'Bilaspur',
+    'Una',
+    'Hamirpur',
+    'Dharamshala',
+    'Palampur',
+    'Nurpur',
+    'Chamba',
+    'Dalhousie',
+    'Kullu',
+    'Banjar',
+    'Mandi',
+    'Sundernagar',
+    'Kinnaur',
+    'Keylong',
+    'Spiti',
+    'Dehradun',
+    'Mussoorie',
+    'Chakrata',
+    'New Tehri',
+    'Narendranagar',
+    'Pauri',
+    'Haridwar',
+    'Uttarkashi',
+    'Almora',
+    'Nainital',
+    'Haldwani',
+    'Champawat',
+    'Bageshwar',
+    'Kolkata',
+    'Siliguri',
+    'Asansol'
   ];
 
   String? _selectedRegion = 'none';
@@ -97,7 +135,7 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
       final result = await _aiRepository.analyzeBiodiversity(
         username: username,
         language: _selectedLanguage,
-        selectedCity: _selectedRegion!,
+        selectedCity: _selectedRegion!, 
         imageBytes: _imageBytes,
         includeImage: includeImage,
       );
@@ -218,7 +256,6 @@ class _AiScannerScreenState extends State<AiScannerScreen> {
                         icon: const Icon(Icons.travel_explore),
                         label: const Text("City Data Only"),
                         style: OutlinedButton.styleFrom(
-                          // --- NEW: FIX VISIBILITY ISSUE FOR THE BUTTON ---
                           foregroundColor: colorScheme.onSurface, 
                           side: BorderSide(color: colorScheme.onSurface.withValues(alpha: 0.3)),
                           padding: const EdgeInsets.symmetric(vertical: 16),
